@@ -67,7 +67,7 @@
 }
 
 .seo-benefit-card {
-    background: rgba(46, 204, 113, 0.08);
+    background: rgba(53, 49, 71, 0.08);
     border-radius: 12px;
     padding: 30px;
     transition: all 0.3s ease;
@@ -77,8 +77,8 @@
 
 .seo-benefit-card:hover {
     transform: translateY(-5px);
-    background: rgba(46, 204, 113, 0.12);
-    box-shadow: 0 10px 20px rgba(46, 204, 113, 0.1);
+    background: rgba(53, 49, 71, 0.12);
+    box-shadow: 0 10px 20px rgba(53, 49, 7153, 49, 71, 0.1);
     white-space: normal !important;
 }
 
