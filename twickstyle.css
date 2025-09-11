@@ -44,7 +44,7 @@
     --default-mono-font-family: var(--font-mono);
   }
 }
-@layer base {
+@layer base !important {
   *, ::after, ::before, ::backdrop, ::file-selector-button {
     box-sizing: border-box;
     margin: 0;
