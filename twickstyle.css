@@ -44,7 +44,7 @@
     --default-mono-font-family: var(--font-mono);
   }
 }
-@layer base !important {
+@layer base {
   *, ::after, ::before, ::backdrop, ::file-selector-button {
     box-sizing: border-box;
     margin: 0;
@@ -70,7 +70,7 @@
     text-decoration: underline dotted;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-size: inherit !mportant;
+    font-size: inherit;
     font-weight: inherit;
   }
   a {
@@ -192,7 +192,7 @@
     display: none !important;
   }
 }
-@layer utilities !important {
+@layer utilities {
   .mx-auto {
     margin-inline: auto;
   }
