@@ -49,7 +49,7 @@ body {
 
 .header p {
     font-size: 1.125rem;
-    color: #9ca3af;
+    color: #9189A3;
     max-width: 48rem;
     margin: 0 auto;
 }
@@ -88,7 +88,7 @@ body {
 
 .card p {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: #9189A3;
 }
 
 /* Список преимуществ */
@@ -125,7 +125,7 @@ body {
 
 .benefit-item p {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: #9189A3;
 }
 
 /* Особенности */
@@ -167,7 +167,7 @@ body {
 
 .feature-item p {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: #9189A3;
 }
 
 /* Отзывы */
@@ -221,7 +221,7 @@ body {
 
 .review-card p {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: #9189A3;
 }
 
 /* FAQ */
@@ -276,12 +276,12 @@ body {
 .faq-answer p {
     padding: 0 1.5rem 1.5rem;
     font-size: 1rem;
-    color: #9ca3af;
+    color: #9189A3;
 }
 .faq-answer ul {
     padding: 0 0 1.5rem 1.5rem;
     list-style: none;
-    color: #9ca3af;
+    color: #9189A3;
 }
 
 /* CTA секция */
