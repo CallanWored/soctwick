@@ -151,14 +151,6 @@ body {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
-.icon {
-    width: 1.5rem;
-    height: 1.5rem;
-    color: #10b981;
-    flex-shrink: 0;
-    margin-top: 0.25rem;
-}
-
 .feature-item h3 {
     font-weight: 600;
     margin-bottom: 0.25rem;
