@@ -329,7 +329,7 @@ body {
     margin-top: 1rem;
 }
 
-/* Адаптивность */
+/* Контакты */
 .contacts-container {
         border-radius: 20px;
         padding: 25px 20px;
@@ -440,6 +440,12 @@ body {
     .contact-info h3 {
         font-size: 14px;
         color: #ecf0f1;
+        margin: 0 0 3px 0;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+    .support-time h3 {
+        font-size: 14px;
         margin: 0 0 3px 0;
         font-weight: 600;
         line-height: 1.2;
