@@ -13,6 +13,10 @@ body {
     min-height: 100vh;
 }
 
+.kAJCRL {
+      white-space: unset !important;
+    }
+
 .container {
     max-width: 72rem;
     margin: 0 auto;
