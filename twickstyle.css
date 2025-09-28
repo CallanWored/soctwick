@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    white-space: normal !important;
 }
 
 body {
@@ -12,10 +13,6 @@ body {
     line-height: 1.6;
     min-height: 100vh;
 }
-
-.kAJCRL {
-      white-space: unset !important;
-    }
 
 .container {
     max-width: 72rem;
