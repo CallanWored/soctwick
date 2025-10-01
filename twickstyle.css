@@ -50,6 +50,7 @@
 .theme-dark .contact-title { color: var(--title-dark); }
 .theme-dark .contact-text { color: var(--text-dark); }
 .theme-dark .contacts-container {border-color: var(--border-dark);}
+.theme-light .sw-cookie {background: var(--bg-dark); border-color: var(--border-dark);}
 .theme-light .sw-title {color:var(--title-dark)}
 .theme-light .btn-accept {color: var(--text-light);}
 .theme-light .sw-modal {background: var(--bg-dark); border-color: var(--border-dark);}
