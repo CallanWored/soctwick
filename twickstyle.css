@@ -42,13 +42,17 @@
 
 /* --- Стили для тёмной темы --- */
 .theme-dark .contact-item{
-  background: #1e2933;
-  border-color: rgb(49, 60, 71);
+  background: var(--bg-dark);
+  border-color: var(--border-dark);
   color: #e6eef8;
+  box-shadow: 0 8px 24px rgba(15,23,36,0.06);
 }
-.theme-dark h3{ color: #e6eef8; }
-.theme-dark p{ color: #9aa6bd; }
-.theme-dark .contacts-container {border-color: rgb(49, 60, 71);}
+.theme-dark .contact-title { color: var(--title-dark); }
+.theme-dark .contact-text { color: var(--text-dark); }
+.theme-dark .contacts-container {border-color: var(--border-dark);}
+.theme-light .sw-title {color:var(--title-dark)}
+.theme-light .btn-accept {color: var(--text-light);}
+.theme-light .sw-modal {background: var(--bg-dark); border-color: var(--border-dark);}
 
 .theme-dark .icon{
   filter: brightness(1.05) saturate(1.1);
