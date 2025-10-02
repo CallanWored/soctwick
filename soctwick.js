@@ -206,9 +206,11 @@ function applyNightFlag(flag) {
   // Очистка inline-styles карточек (если какие-то скрипты ставили их)
   document.querySelectorAll('.contact-item').forEach(el => {
     el.style.removeProperty('background')
-    el.style.removeProperty('background-image')
-    el.style.removeProperty('background-color')
+    el.style.removeProperty('background')
+    el.style.removeProperty('background')
     el.style.removeProperty('border-color')
+    el.style.removeProperty('color')
+    el.style.removeProperty('box-shadow')
   })
 }
 
