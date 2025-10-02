@@ -204,15 +204,7 @@ function applyNightFlag(flag) {
   applyTheme(flag ? 'theme-dark' : 'theme-light')
 
   // Очистка inline-styles карточек (если какие-то скрипты ставили их)
-  document.querySelectorAll('.contact-item').forEach(el => {
-    el.style.removeProperty('background')
-    el.style.removeProperty('background')
-    el.style.removeProperty('background')
-    el.style.removeProperty('border-color')
-    el.style.removeProperty('color')
-    el.style.removeProperty('box-shadow')
-  })
-}
+  
 
 // Debounced evaluate (с учётом localStorage флага)
 let _deb = null
