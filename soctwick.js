@@ -187,34 +187,124 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function applyTheme(t){ document.documentElement.classList.remove('theme-dark','theme-light'); document.documentElement.classList.add(t); document.body.setAttribute('data-ui-theme', t.replace('theme-','')) }
 
-    let _deb = null
-    function evaluate() {
-      if (_deb) clearTimeout(_deb)
-      _deb = setTimeout(()=> {
-        const cs = getComputedStyle(document.body)
-        let bg = cs.backgroundColor || cs.background || ''
-        if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent' || !bg) {
-          const el = document.querySelector('main, #root, .page, .app') || document.body
-          const cs2 = getComputedStyle(el)
-          bg = cs2.backgroundColor || cs2.background || bg
-        }
-        const rgb = parseRGB(bg) || { r:255, g:255, b:255 }
-        const lum = relativeLuminance(rgb)
-        const threshold = 0.5
-        applyTheme(lum < threshold ? 'theme-dark' : 'theme-light')
-      }, 160)
+   // Безопасное чтение флага из localStorage
+function readNightFlagFromStorage() {
+  try {
+    const raw = window.localStorage && window.localStorage.getItem('night_theme_enabled')
+    if (raw === null || typeof raw === 'undefined') return undefined
+    const parsed = JSON.parse(raw)
+    return typeof parsed === 'boolean' ? parsed : undefined
+  } catch (e) {
+    return undefined
+  }
+}
+
+// Функция, которая применяется при явном флаге
+function applyNightFlag(flag) {
+  applyTheme(flag ? 'theme-dark' : 'theme-light')
+
+  // Очистка inline-styles карточек (если какие-то скрипты ставили их)
+  document.querySelectorAll('.contact-item').forEach(el => {
+    el.style.removeProperty('background')
+    el.style.removeProperty('background-image')
+    el.style.removeProperty('background-color')
+    el.style.removeProperty('border-color')
+  })
+}
+
+// Debounced evaluate (с учётом localStorage флага)
+let _deb = null
+function evaluate() {
+  if (_deb) clearTimeout(_deb)
+  _deb = setTimeout(() => {
+    // 1) Приоритет — значение из localStorage (если явно задано true/false)
+    const storageFlag = readNightFlagFromStorage()
+    if (typeof storageFlag === 'boolean') {
+      applyNightFlag(storageFlag)
+      return
     }
 
-    // старт
-    evaluate()
-    // наблюдаем только атрибуты class/style на body (без subtree)
-    const obs = new MutationObserver(evaluate)
-    try {
-      obs.observe(document.body, { attributes: true, attributeFilter: ['class','style'] })
-    } catch (e) { /* ignore */ }
+    // 2) Иначе — ваша стандартная логика по фону
+    const cs = getComputedStyle(document.body)
+    let bg = cs.backgroundColor || cs.background || ''
+    if (bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent' || !bg) {
+      const el = document.querySelector('main, #root, .page, #app') || document.body
+      const cs2 = getComputedStyle(el)
+      bg = cs2.backgroundColor || cs2.background || bg
+    }
+    const rgb = parseRGB(bg) || { r: 255, g: 255, b: 255 }
+    const lum = relativeLuminance(rgb)
+    const threshold = 0.5
+    applyTheme(lum < threshold ? 'theme-dark' : 'theme-light')
+  }, 160)
+}
 
-    // отключим observer через N секунд, если нам не нужен постоянно (опционально)
-    const OBS_TIMEOUT = 30 * 1000
-    setTimeout(()=> { try { obs.disconnect() } catch(e){} }, OBS_TIMEOUT)
-  })()
+/* ------------------ Слушатели изменений storage ------------------ */
+
+// 1) Изменения в других вкладках/окнах (storage event)
+window.addEventListener('storage', function (e) {
+  if (e.key === 'night_theme_enabled') {
+    try {
+      const val = e.newValue == null ? undefined : JSON.parse(e.newValue)
+      if (typeof val === 'boolean') applyNightFlag(val)
+      else evaluate() // если удалили ключ — вернуть авто/вычисление
+    } catch (err) {
+      evaluate()
+    }
+  }
+})
+
+/* 2) Патч localStorage.setItem/removeItem — чтобы ловить изменения в том же окне,
+      когда React делает localStorage.setItem(...) (storage не срабатывает в том же окне) */
+;(function patchLocalStorageThemeEvents() {
+  try {
+    if (window.__soctwick_localstorage_patched) return
+    const origSet = Storage.prototype.setItem
+    const origRemove = Storage.prototype.removeItem
+
+    Storage.prototype.setItem = function (key, value) {
+      // вызвать оригинал
+      origSet.apply(this, arguments)
+      // если это наш ключ — диспатчим кастомное событие
+      if (key === 'night_theme_enabled') {
+        let parsed
+        try { parsed = JSON.parse(value) } catch (e) { parsed = undefined }
+        // событие с деталями (в том же окне)
+        window.dispatchEvent(new CustomEvent('soctwick:themechange', { detail: { value: parsed } }))
+      }
+    }
+
+    Storage.prototype.removeItem = function (key) {
+      origRemove.apply(this, arguments)
+      if (key === 'night_theme_enabled') {
+        window.dispatchEvent(new CustomEvent('soctwick:themechange', { detail: { value: undefined } }))
+      }
+    }
+
+    window.__soctwick_localstorage_patched = true
+  } catch (e) {
+    // не критично, продолжаем работать без патча
+    console.warn('soctwick: localStorage patch failed', e)
+  }
+})()
+
+// 3) Ловим наше кастомное событие
+window.addEventListener('soctwick:themechange', function (e) {
+  const v = e && e.detail && e.detail.value
+  if (typeof v === 'boolean') applyNightFlag(v)
+  else evaluate()
+})
+
+/* Вызовем evaluate в начале (инициализация) */
+evaluate()
+
+/* Опционально: наблюдатель за атрибутами body/#root как раньше */
+const obs = new MutationObserver(evaluate)
+try {
+  const themeHost = document.getElementById('root') || document.body || document.documentElement
+  obs.observe(themeHost, { attributes: true, attributeFilter: ['class', 'style'] })
+} catch (e) { /* ignore */ }
+
+// Очистка: при выгрузке отключаем observer
+window.addEventListener('beforeunload', () => { try { obs.disconnect() } catch (e) {} })
 })
