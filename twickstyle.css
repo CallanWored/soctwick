@@ -454,7 +454,6 @@
 
 .footer-card {
     width: 100%;
-    max-width: var(--footer-max-w);
     margin: 0 auto;
     border: 1px solid var(--border-dark);
     border-radius: var(--card-radius);
@@ -515,7 +514,7 @@
 .muted { color: var(--muted); }
 .section-title { margin-top: 18px; font-weight: 700; color: var(--text-dark); }
 .link-accent { color: var(--text-dark); text-decoration: none; }
-.link-accent:hover { color: var(--muted); }
+.link-accent:hover { color: var(--accent); }
 .link-accent2 { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
 .uline { font-size: 14px; text-decoration: underline; }
 
