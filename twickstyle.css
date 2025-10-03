@@ -24,9 +24,32 @@
     /* Sizing & Effects */
     --card-radius: 16px;
     --card-padding: 14px;
-    --footer-max-w: 1100px;
+    --footer-max-w: 1200px;
     --transition: 240ms cubic-bezier(.2, .9, .3, 1);
 }
+
+
+/* ==========================================================================
+   2. GENERAL STYLES & RESETS
+   ========================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--body-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 40px 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 
 /* ==========================================================================
    3. THEME STYLES
@@ -454,7 +477,8 @@
 
 .footer-card {
     width: 100%;
-    margin: 0 auto;
+    max-width: var(--footer-max-w);
+    margin: 5rem auto 0 auto;
     border: 1px solid var(--border-dark);
     border-radius: var(--card-radius);
     overflow: hidden;
@@ -483,7 +507,7 @@
 .cols {
     display: flex;
     justify-content: space-between;
-    gap: 36px;
+    gap: 25px;
     align-items: flex-start;
 }
 
@@ -508,15 +532,15 @@
     padding: 0;
     margin: 0 0 18px 0;
 }
-.nav li { margin: 5px 0; }
 .nav a { font-weight: 600; }
 
 .muted { color: var(--muted); }
 .section-title { margin-top: 18px; font-weight: 700; color: var(--text-dark); }
 .link-accent { color: var(--text-dark); text-decoration: none; }
-.link-accent:hover { color: var(--accent); }
+.link-accent:hover { color: var(--muted); }
 .link-accent2 { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
 .uline { font-size: 14px; text-decoration: underline; }
+.section-rules {margin-top: 25px;}
 
 .btn-telegram {
     display: inline-flex;
@@ -536,23 +560,26 @@
 .payments {
     list-style: none;
     padding: 0;
-    margin: 12px 0 0 0;
     display: flex;
-    gap: 12px;
+    column-gap: 8px;
+    row-gap: 8px;
     align-items: center;
     flex-wrap: wrap;
 }
 
 .pay-logo {
-    width: 56px;
+    width: 42px;
     height: auto;
     display: inline-block;
     filter: grayscale(30%);
 }
 
 .footer-bottom {
+    display: flex;
     border-top: 1px solid var(--border-dark);
     padding: 12px 28px;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .footnote {
@@ -563,7 +590,6 @@
 .copyright {
     color: var(--muted);
     font-size: 12px;
-    margin-top: 18px;
 }
 
 
@@ -617,6 +643,11 @@
     .payments {
         justify-content: center;
     }
+    .footer-bottom {text-align: center;justify-content: center;gap:10px}
+}
+
+@media (min-width: 880px) {
+    .payments {max-width: 220px;}
 }
 
 @media (max-width: 720px) {
