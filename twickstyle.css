@@ -68,8 +68,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-.theme-dark h3 { color: #e6eef8; }
-.theme-dark p { color: #9aa6bd; }
+.theme-dark .contact-title { color: var(—title-dark); }
+.theme-dark .contact-text { color: var(—text-dark); }
 .theme-dark .contacts-container { border-color: var(--border-dark); }
 .theme-dark .sw-cookie { background: var(--bg-dark); }
 .theme-dark .icon {
