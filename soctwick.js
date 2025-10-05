@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })()
 
   /* ------------------ Copy to clipboard ------------------ */
-  document.getElementById('emailContact').addEventListener('click', async function(){
+ ;(function initCopy(){
   const text = document.getElementById('emailText').innerText.trim();
   try{
     await navigator.clipboard.writeText(text);
