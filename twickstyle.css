@@ -57,7 +57,7 @@
 
 /* --- Dark Theme --- */
 .theme-dark .contact-item {
-    background: var(--card-bg);
+    background: var(--bg-dark);
     border-color: var(--border-dark);
     color: #e6eef8;
 }
@@ -112,7 +112,6 @@
   padding:22px;
   gap:18px;
   border:1px solid transparent;
-  backdrop-filter: blur(8px);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
@@ -155,7 +154,7 @@
   padding:var(--card-padding);
   border-radius:12px;
   background:var(--card-bg);
-  border:1px solid transparent;
+  border: 1px solid transparent;
   text-decoration:none;
   color:inherit;
   cursor:pointer;
@@ -164,20 +163,6 @@
   box-sizing:border-box;
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
   position:relative;
-}
-
-/* На узких экранах — элементы занимают всю ширину */
-@media (max-width:580px){
-  .contact-item{
-    flex-basis:100%;
-  }
-}
-
-/* Ховер эффект */
-.contact-item:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.45);
-  border-color: rgba(255,255,255,0.06);
 }
 
 /* Внешний значок для ссылок */
@@ -256,12 +241,6 @@
 .contact-item:focus{
   outline:3px solid rgba(74,163,255,0.12);
   outline-offset:2px;
-}
-
-/* Мелкие адаптивные поправки */
-@media (min-width:900px){
-  .contacts-container{ padding:28px; gap:22px; }
-  .logo h1{ font-size:22px; }
 }
 
 /* ==========================================================================
@@ -645,7 +624,11 @@
 /* ==========================================================================
    10. RESPONSIVE MEDIA QUERIES
    ========================================================================== */
-
+@media (max-width:580px){
+  .contact-item{
+    flex-basis:100%;
+  }
+}
 @media (max-width: 880px) {
     .cols {
         flex-direction: column;
@@ -664,6 +647,8 @@
 
 @media (min-width: 880px) {
     .payments {max-width: 220px;}
+    .contacts-container{ padding:28px; gap:22px; }
+    .logo h1{ font-size:22px; }
 }
 
 @media (max-width: 720px) {
