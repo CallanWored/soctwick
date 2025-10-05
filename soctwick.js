@@ -70,55 +70,20 @@ document.addEventListener('DOMContentLoaded', function () {
   })()
 
   /* ------------------ Copy to clipboard ------------------ */
-  ;(function initCopy() {
-    const notification = document.getElementById('copyNotification')
-
-    async function copyToClipboard(text, type = '') {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text)
-        } else {
-          const ta = document.createElement('textarea')
-          ta.value = text
-          ta.style.position = 'fixed'
-          ta.style.left = '-9999px'
-          ta.setAttribute('aria-hidden', 'true')
-          document.body.appendChild(ta)
-          ta.focus()
-          ta.select()
-          try { ta.setSelectionRange(0, ta.value.length) } catch (e) {}
-          document.execCommand('copy')
-          document.body.removeChild(ta)
-        }
-        showNotification(`${type ? type + ' ' : ''}скопирован в буфер обмена!`)
-      } catch (err) {
-        console.error('copy error', err)
-        showNotification('Не удалось скопировать в буфер обмена')
-      }
-    }
-
-    function showNotification(msg) {
-      if (!notification) { console.warn('copyNotification not found'); return }
-      notification.textContent = msg
-      notification.classList.add('show')
-      if (notification._t) clearTimeout(notification._t)
-      notification._t = setTimeout(() => {
-        notification.classList.remove('show')
-        delete notification._t
-      }, 2000)
-    }
-
-    const emailContact = document.getElementById('emailContact')
-    if (emailContact) {
-      emailContact.addEventListener('click', e => {
-        e.preventDefault()
-        copyToClipboard('support@looksmm.ru', 'Email')
-      })
-    }
-
-    window.soctwickCopy = { copyToClipboard, showNotification }
-  })()
-
+  document.getElementById('emailContact').addEventListener('click', async function(){
+  const text = document.getElementById('emailText').innerText.trim();
+  try{
+    await navigator.clipboard.writeText(text);
+    this.setAttribute('aria-label', 'Email скопирован');
+    // краткая визуальная обратная связь
+    const original = this.querySelector('.contact-info h3').textContent;
+    this.querySelector('.contact-info h3').textContent = 'Скопировано!';
+    setTimeout(()=> this.querySelector('.contact-info h3').textContent = original, 1400);
+  }catch(e){
+    // fallback: выделить и сообщить пользователю
+    alert('Не удалось автоматически скопировать email. Пожалуйста, скопируйте вручную: ' + text);
+  }
+  });
   /* ------------------ Cookie banner / modal ------------------ */
   ;(function initCookie() {
     const KEY = 'soctwick_cookie_v1'
