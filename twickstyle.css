@@ -24,6 +24,7 @@
     /* Sizing & Effects */
     --card-radius: 16px;
     --card-padding: 14px;
+    --gap: 14px;
     --footer-max-w: 1280px;
     --transition: 240ms cubic-bezier(.2, .9, .3, 1);
 }
