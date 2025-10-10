@@ -13,8 +13,7 @@
     --text-light: rgb(114, 138, 150);
     --text-dark: #e9f0f2;
     --muted: #9aa6ad;
-    --accent-green: #2ecc71;
-    --accent-green-dark: #24b86a;
+    --accent-green: rgb(50, 199, 75);
     --accent-blue: #2563eb;
     --bg-light: rgb(244, 247, 250);
     --bg-dark: #1e2933;
@@ -44,7 +43,7 @@
 .theme-light .contact-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    border-color: rgba(15, 23, 36, 0.10);
+    border-color: var(--accent-green);
 }
 
 .theme-light .contact-title { color: var(--title-light); }
@@ -63,9 +62,8 @@
 }
 
 .theme-dark .contact-item:hover {
-    background-color: rgba(74, 163, 255, 0.15);
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.10);
+    border-color: var(--accent-green);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
@@ -220,12 +218,21 @@
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:8px;
   padding:12px;
   border-radius:12px;
   background:linear-gradient(180deg, rgba(46,204,113,0.06), rgba(46,204,113,0.03));
-  border:1px solid rgba(46,204,113,0.12);
+  border:2px dashed rgba(46,204,113,0.12);
   text-align:center;
+}
+
+.support-time h3{
+   margin:0;
+   font-size:14px;
+}
+
+.support-time p{
+   font-size: 13px;
+   color: var(--muted);
 }
 
 /* Подсказка внизу */
