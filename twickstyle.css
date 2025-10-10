@@ -82,7 +82,7 @@
   width:min(720px, 100%);
   max-width:720px;
   border-radius:20px;
-  padding:22px;
+  padding:25px 15px !important;
   gap:18px;
   border:1px solid transparent;
   transition: transform var(--transition), box-shadow var(--transition);
@@ -628,7 +628,6 @@
 
 @media (min-width: 880px) {
     .payments {max-width: 220px;}
-    .contacts-container{ padding:28px; gap:22px; }
     .logo h1{ font-size:22px; }
 }
 
