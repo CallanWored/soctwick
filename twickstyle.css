@@ -493,8 +493,10 @@
 }
 
 .col h3 {
-    margin: 0 0 12px 0;
+    margin-bottom: 15px;
+    color: var(--title-dark);
     font-size: 16px;
+    font-weight: 600;
 }
 
 .col p {
@@ -512,8 +514,8 @@
 
 .muted { color: var(--muted); }
 .section-title { margin-top: 18px; font-weight: 700; color: var(--text-dark); }
-.link-accent { color: var(--text-dark); text-decoration: none; }
-.link-accent:hover { color: var(--muted); }
+.link-accent { color: var(--text-dark); text-decoration: none; padding-bottom: 5px;}
+.link-accent:hover { color: var(--accent-green); }
 .link-accent2 { color: var(--accent-blue); text-decoration: none; font-weight: 600; }
 .uline { font-size: 14px; text-decoration: underline; }
 .section-rules {margin-top: 25px;}
@@ -529,9 +531,11 @@
     text-decoration: none;
     font-weight: 700;
     box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+    transition: transform 0.3s;
 }
 .btn-telegram img { width: 18px; height: 18px; }
 .btn-telegram:focus { outline: 3px solid rgba(37, 99, 235, 0.18); outline-offset: 2px; }
+.btn-telegram:hover {transform: scale(1.1);}
 
 .payments {
     list-style: none;
