@@ -213,4 +213,79 @@ document.addEventListener('DOMContentLoaded', function () {
     const OBS_TIMEOUT = 30 * 1000;
     setTimeout(()=> { try { obs.disconnect(); } catch(e){} }, OBS_TIMEOUT);
   })();
+/* ------------------ Функция для обновления favicon ------------------ */
+function updateFavicon(imageUrl) {
+    // Удаляем старые favicon
+    const existingFavicons = document.querySelectorAll("link[rel*='icon']");
+    existingFavicons.forEach(favicon => favicon.remove());
+    
+    // Создаем новый favicon
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = 'image/png';
+    link.href = imageUrl;
+    
+    document.head.appendChild(link);
+}
+
+// Функция для получения изображения из контейнера
+function getImageFromContainer() {
+    const container = document.querySelector('.order-image-container');
+    if (!container) return null;
+    
+    // Ищем img элемент
+    const img = container.querySelector('img');
+    if (img && img.src) {
+        return img.src;
+    }
+    
+    // Альтернативно ищем background-image
+    const bgImage = window.getComputedStyle(container).backgroundImage;
+    if (bgImage && bgImage !== 'none') {
+        return bgImage.slice(5, -2); // Убираем url(" и ")
+    }
+    
+    return null;
+}
+
+// Основная функция
+function initDynamicFavicon() {
+    // Первичная установка favicon
+    const initialImage = getImageFromContainer();
+    if (initialImage) {
+        updateFavicon(initialImage);
+    }
+    
+    // Создаем наблюдатель за изменениями
+    const observer = new MutationObserver((mutations) => {
+        const newImage = getImageFromContainer();
+        if (newImage) {
+            updateFavicon(newImage);
+        }
+    });
+    
+    // Наблюдаем за изменениями в контейнере
+    const container = document.querySelector('.order-image-container');
+    if (container) {
+        observer.observe(container, {
+            childList: true,
+            attributes: true,
+            subtree: true,
+            attributeFilter: ['src', 'style']
+        });
+    }
+    
+    // Также наблюдаем за всем body на случай динамической загрузки
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
+// Запускаем после загрузки DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDynamicFavicon);
+} else {
+    initDynamicFavicon();
+}
 });
