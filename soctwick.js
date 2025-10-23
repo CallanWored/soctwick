@@ -217,121 +217,221 @@ document.addEventListener('DOMContentLoaded', function () {
 (function() {
     'use strict';
     
-    // Сохраняем оригинальную favicon при первой загрузке
     const originalFavicon = document.querySelector("link[rel*='icon']")?.href || '/favicon.ico';
     let currentFavicon = originalFavicon;
+    let categoryFavicon = null;
+    let currentCategory = null;
+    let updateTimeout = null;
     
-    // Проверяем, находимся ли мы на странице категории
-    function isCategoryPage() {
+    // Debounce
+    const debounce = (func, wait) => (...args) => {
+        clearTimeout(updateTimeout);
+        updateTimeout = setTimeout(() => func(...args), wait);
+    };
+    
+    // Получаем категорию из URL
+    const getCategoryFromUrl = () => {
         const path = window.location.pathname;
-        // Проверяем что это /order/категория, но не просто /order или /order/
-        return /^\/order\/[^\/]+/.test(path) && path !== '/order' && path !== '/order/';
-    }
-    
-    // Функция для обновления favicon
-    function updateFavicon(imageUrl) {
-        if (currentFavicon === imageUrl) return; // Избегаем лишних обновлений
+        const params = new URLSearchParams(window.location.search);
         
-        // Удаляем старые favicon
-        const existingFavicons = document.querySelectorAll("link[rel*='icon']");
-        existingFavicons.forEach(favicon => favicon.remove());
-        
-        // Создаем новый favicon
-        const link = document.createElement('link');
-        link.rel = 'icon';
-        link.type = 'image/png';
-        link.href = imageUrl;
-        
-        document.head.appendChild(link);
-        currentFavicon = imageUrl;
-    }
-    
-    // Восстанавливаем оригинальную favicon
-    function restoreOriginalFavicon() {
-        updateFavicon(originalFavicon);
-    }
-    
-    // Получаем изображение из контейнера
-    function getImageFromContainer() {
-        const container = document.querySelector('.order-image-container');
-        if (!container) return null;
-        
-        // Ищем img элемент
-        const img = container.querySelector('img');
-        if (img && img.src) {
-            return img.src;
+        if (path === '/order' && params.has('network_id')) {
+            return `admin_${params.get('network_id')}`;
         }
         
-        // Альтернативно ищем background-image
-        const bgImage = window.getComputedStyle(container).backgroundImage;
-        if (bgImage && bgImage !== 'none') {
-            return bgImage.slice(5, -2).replace(/['"]/g, '');
+        const match = path.match(/^\/order\/([^\/]+)/);
+        return match ? match[1] : null;
+    };
+    
+    // Проверка типа страницы
+    const isMainCategoryPage = () => {
+        const path = window.location.pathname;
+        const params = new URLSearchParams(window.location.search);
+        
+        if (path === '/order' && params.has('network_id')) return true;
+        
+        const parts = path.split('/').filter(Boolean);
+        return parts.length === 2 && parts[0] === 'order';
+    };
+    
+    // Обновление favicon
+    const updateFavicon = (imageUrl) => {
+        if (!imageUrl || currentFavicon === imageUrl) return;
+        
+        document.querySelectorAll("link[rel*='icon']").forEach(el => el.remove());
+        
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        link.type = imageUrl.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
+        link.href = imageUrl;
+        document.head.appendChild(link);
+        
+        currentFavicon = imageUrl;
+    };
+    
+    // Восстановление оригинальной favicon
+    const restoreOriginalFavicon = () => {
+        if (currentFavicon !== originalFavicon) {
+            updateFavicon(originalFavicon);
+            categoryFavicon = null;
+            currentCategory = null;
+        }
+    };
+    
+    // Получение изображения из DOM
+    const getImage = () => {
+        const params = new URLSearchParams(window.location.search);
+        const networkId = params.get('network_id');
+        
+        // Для админки
+        if (networkId) {
+            const links = document.querySelectorAll(`a[href*="network_id=${networkId}"]`);
+            for (const link of links) {
+                const img = link.querySelector('img');
+                if (img?.src) return img.src;
+            }
+        }
+        
+        // Для фронтенда
+        const selectors = [
+            '.order-image-container img',
+            '.service-image img',
+            '.category-image img',
+            '[class*="image-container"] img',
+            '[class*="ImageContainer"] img'
+        ];
+        
+        for (const selector of selectors) {
+            const img = document.querySelector(selector);
+            if (img?.src) return img.src;
+            
+            // Проверка на background-image
+            const container = document.querySelector(selector.replace(' img', ''));
+            if (container) {
+                const bgImage = getComputedStyle(container).backgroundImage;
+                if (bgImage && bgImage !== 'none') {
+                    return bgImage.slice(5, -2).replace(/['"]/g, '');
+                }
+            }
         }
         
         return null;
-    }
+    };
     
-    // Основная функция проверки и обновления
-    function checkAndUpdateFavicon() {
-        if (isCategoryPage()) {
-            const imageUrl = getImageFromContainer();
-            if (imageUrl) {
-                updateFavicon(imageUrl);
-            }
-        } else {
+    // Основная логика проверки и обновления
+    const checkAndUpdateFavicon = () => {
+        const category = getCategoryFromUrl();
+        
+        // Вне категорий - восстанавливаем оригинал
+        if (!category) {
             restoreOriginalFavicon();
+            return;
         }
-    }
+        
+        // Та же категория - используем сохраненную иконку
+        if (category === currentCategory && categoryFavicon) {
+            updateFavicon(categoryFavicon);
+            return;
+        }
+        
+        // Новая категория или главная страница категории
+        if (category !== currentCategory || isMainCategoryPage()) {
+            const imageUrl = getImage();
+            
+            if (imageUrl) {
+                categoryFavicon = imageUrl;
+                currentCategory = category;
+                updateFavicon(imageUrl);
+            } else if (isMainCategoryPage()) {
+                // Повторная попытка для главной страницы категории
+                setTimeout(() => {
+                    const retryImage = getImage();
+                    if (retryImage) {
+                        categoryFavicon = retryImage;
+                        currentCategory = category;
+                        updateFavicon(retryImage);
+                    }
+                }, 500);
+            }
+        }
+    };
+    
+    const debouncedCheck = debounce(checkAndUpdateFavicon, 400);
+    
+    // Обработка кликов
+    const handleClick = (e) => {
+        const link = e.target.closest('a');
+        if (!link?.href) return;
+        
+        // Клик по категории в админке
+        if (link.href.includes('network_id=')) {
+            const img = link.querySelector('img');
+            if (img?.src) {
+                const params = new URLSearchParams(new URL(link.href).search);
+                const networkId = params.get('network_id');
+                
+                clearTimeout(updateTimeout);
+                setTimeout(() => {
+                    categoryFavicon = img.src;
+                    currentCategory = `admin_${networkId}`;
+                    updateFavicon(img.src);
+                }, 100);
+                return;
+            }
+        }
+        
+        // Клик на главную /order
+        if (link.href.endsWith('/order') && !link.href.includes('network_id=')) {
+            setTimeout(restoreOriginalFavicon, 100);
+            return;
+        }
+        
+        // Любые другие ссылки /order
+        if (link.href.includes('/order')) {
+            clearTimeout(updateTimeout);
+            setTimeout(checkAndUpdateFavicon, 500);
+        }
+    };
     
     // Инициализация
-    function init() {
-        checkAndUpdateFavicon();
+    const init = () => {
+        // Начальная проверка
+        setTimeout(checkAndUpdateFavicon, 500);
+        setTimeout(checkAndUpdateFavicon, 1500);
         
-        // Наблюдаем за изменениями в контейнере (только на страницах категорий)
-        if (isCategoryPage()) {
-            const container = document.querySelector('.order-image-container');
-            if (container) {
-                const observer = new MutationObserver(() => {
-                    if (isCategoryPage()) {
-                        checkAndUpdateFavicon();
-                    }
-                });
-                
-                observer.observe(container, {
-                    childList: true,
-                    attributes: true,
-                    subtree: true,
-                    attributeFilter: ['src', 'style']
-                });
-            }
-        }
-        
-        // Отслеживаем изменения URL (для SPA навигации)
+        // Единый MutationObserver для всего
         let lastUrl = location.href;
-        new MutationObserver(() => {
-            const currentUrl = location.href;
-            if (currentUrl !== lastUrl) {
-                lastUrl = currentUrl;
-                setTimeout(checkAndUpdateFavicon, 100);
+        const observer = new MutationObserver(() => {
+            // Проверка изменения URL
+            if (location.href !== lastUrl) {
+                lastUrl = location.href;
+                setTimeout(checkAndUpdateFavicon, 400);
+                return;
             }
-        }).observe(document.body, { childList: true, subtree: true });
-        
-        // Отслеживаем события истории браузера
-        window.addEventListener('popstate', () => {
-            setTimeout(checkAndUpdateFavicon, 100);
-        });
-        
-        // Отслеживаем клики для AJAX навигации
-        document.addEventListener('click', (e) => {
-            const link = e.target.closest('a');
-            if (link && link.href && link.href.includes('/order/')) {
-                setTimeout(checkAndUpdateFavicon, 200);
+            
+            // Проверка изменений на странице категории
+            if (isMainCategoryPage()) {
+                debouncedCheck();
             }
         });
-    }
-  
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['src', 'style', 'class']
+        });
+        
+        // События
+        window.addEventListener('popstate', () => setTimeout(checkAndUpdateFavicon, 400));
+        document.addEventListener('click', handleClick, true);
+        document.addEventListener('load', (e) => {
+            if (e.target.tagName === 'IMG' && isMainCategoryPage()) {
+                debouncedCheck();
+            }
+        }, true);
+    };
     
-    // Запускаем после загрузки DOM
+    // Запуск
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
