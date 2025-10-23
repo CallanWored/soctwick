@@ -214,78 +214,127 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(()=> { try { obs.disconnect(); } catch(e){} }, OBS_TIMEOUT);
   })();
 /* ------------------ Функция для обновления favicon ------------------ */
-function updateFavicon(imageUrl) {
-    // Удаляем старые favicon
-    const existingFavicons = document.querySelectorAll("link[rel*='icon']");
-    existingFavicons.forEach(favicon => favicon.remove());
+(function() {
+    'use strict';
     
-    // Создаем новый favicon
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.type = 'image/png';
-    link.href = imageUrl;
+    // Сохраняем оригинальную favicon при первой загрузке
+    const originalFavicon = document.querySelector("link[rel*='icon']")?.href || '/favicon.ico';
+    let currentFavicon = originalFavicon;
     
-    document.head.appendChild(link);
-}
-
-// Функция для получения изображения из контейнера
-function getImageFromContainer() {
-    const container = document.querySelector('.order-image-container');
-    if (!container) return null;
-    
-    // Ищем img элемент
-    const img = container.querySelector('img');
-    if (img && img.src) {
-        return img.src;
+    // Проверяем, находимся ли мы на странице категории
+    function isCategoryPage() {
+        const path = window.location.pathname;
+        // Проверяем что это /order/категория, но не просто /order или /order/
+        return /^\/order\/[^\/]+/.test(path) && path !== '/order' && path !== '/order/';
     }
     
-    // Альтернативно ищем background-image
-    const bgImage = window.getComputedStyle(container).backgroundImage;
-    if (bgImage && bgImage !== 'none') {
-        return bgImage.slice(5, -2); // Убираем url(" и ")
+    // Функция для обновления favicon
+    function updateFavicon(imageUrl) {
+        if (currentFavicon === imageUrl) return; // Избегаем лишних обновлений
+        
+        // Удаляем старые favicon
+        const existingFavicons = document.querySelectorAll("link[rel*='icon']");
+        existingFavicons.forEach(favicon => favicon.remove());
+        
+        // Создаем новый favicon
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        link.type = 'image/png';
+        link.href = imageUrl;
+        
+        document.head.appendChild(link);
+        currentFavicon = imageUrl;
     }
     
-    return null;
-}
-
-// Основная функция
-function initDynamicFavicon() {
-    // Первичная установка favicon
-    const initialImage = getImageFromContainer();
-    if (initialImage) {
-        updateFavicon(initialImage);
+    // Восстанавливаем оригинальную favicon
+    function restoreOriginalFavicon() {
+        updateFavicon(originalFavicon);
     }
     
-    // Создаем наблюдатель за изменениями
-    const observer = new MutationObserver((mutations) => {
-        const newImage = getImageFromContainer();
-        if (newImage) {
-            updateFavicon(newImage);
+    // Получаем изображение из контейнера
+    function getImageFromContainer() {
+        const container = document.querySelector('.order-image-container');
+        if (!container) return null;
+        
+        // Ищем img элемент
+        const img = container.querySelector('img');
+        if (img && img.src) {
+            return img.src;
         }
-    });
+        
+        // Альтернативно ищем background-image
+        const bgImage = window.getComputedStyle(container).backgroundImage;
+        if (bgImage && bgImage !== 'none') {
+            return bgImage.slice(5, -2).replace(/['"]/g, '');
+        }
+        
+        return null;
+    }
     
-    // Наблюдаем за изменениями в контейнере
-    const container = document.querySelector('.order-image-container');
-    if (container) {
-        observer.observe(container, {
-            childList: true,
-            attributes: true,
-            subtree: true,
-            attributeFilter: ['src', 'style']
+    // Основная функция проверки и обновления
+    function checkAndUpdateFavicon() {
+        if (isCategoryPage()) {
+            const imageUrl = getImageFromContainer();
+            if (imageUrl) {
+                updateFavicon(imageUrl);
+            }
+        } else {
+            restoreOriginalFavicon();
+        }
+    }
+    
+    // Инициализация
+    function init() {
+        checkAndUpdateFavicon();
+        
+        // Наблюдаем за изменениями в контейнере (только на страницах категорий)
+        if (isCategoryPage()) {
+            const container = document.querySelector('.order-image-container');
+            if (container) {
+                const observer = new MutationObserver(() => {
+                    if (isCategoryPage()) {
+                        checkAndUpdateFavicon();
+                    }
+                });
+                
+                observer.observe(container, {
+                    childList: true,
+                    attributes: true,
+                    subtree: true,
+                    attributeFilter: ['src', 'style']
+                });
+            }
+        }
+        
+        // Отслеживаем изменения URL (для SPA навигации)
+        let lastUrl = location.href;
+        new MutationObserver(() => {
+            const currentUrl = location.href;
+            if (currentUrl !== lastUrl) {
+                lastUrl = currentUrl;
+                setTimeout(checkAndUpdateFavicon, 100);
+            }
+        }).observe(document.body, { childList: true, subtree: true });
+        
+        // Отслеживаем события истории браузера
+        window.addEventListener('popstate', () => {
+            setTimeout(checkAndUpdateFavicon, 100);
+        });
+        
+        // Отслеживаем клики для AJAX навигации
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href && link.href.includes('/order/')) {
+                setTimeout(checkAndUpdateFavicon, 200);
+            }
         });
     }
     
-    // Также наблюдаем за всем body на случай динамической загрузки
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-}
-
-// Запускаем после загрузки DOM
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDynamicFavicon);
-} else {
-    initDynamicFavicon();
-}
+    // Запускаем после загрузки DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 });
