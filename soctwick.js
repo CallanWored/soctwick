@@ -329,12 +329,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
-    // Запускаем после загрузки DOM
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
 })();
 });
