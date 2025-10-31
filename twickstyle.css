@@ -560,6 +560,7 @@
     padding: 12px 28px;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 10px;
 }
 
 .footnote {
@@ -627,7 +628,7 @@
     .payments {
         justify-content: center;
     }
-    .footer-bottom {text-align: center;justify-content: center;gap:10px}
+    .footer-bottom {text-align: center;justify-content: center;}
 }
 
 @media (min-width: 880px) {
