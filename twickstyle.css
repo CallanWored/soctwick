@@ -491,12 +491,8 @@
 }
 
 @media (max-width: 762px) {
-    .cookie-banner{
-        width: calc(100vw - 40px);
-      }
-      .rest{
-        display: block;
-      }
+   .rest{display: block;}
+   .cookie-text {text-align: start;}
 }
 
 @media (max-width: 480px) {
