@@ -35,29 +35,7 @@
     --transition: 240ms cubic-bezier(.2, .9, .3, 1);
 }
 
-
-/* ==========================================================================
-   2. GENERAL STYLES & RESETS
-   ========================================================================== */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Inter, sans-serif;
-    background: var(--body-bg);
-    color: var(--text-dark);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 40px 1rem;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-
+.footer-container {display: none;}
 /* ==========================================================================
    3. THEME STYLES
    ========================================================================== */
