@@ -354,7 +354,6 @@
     border: var(--tw-corners);
     border-radius: var(--tw-radius);
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.55);
 }
 
 .footer-top {
@@ -404,6 +403,7 @@
     padding: 0;
     margin: 0 0 18px 0;
 }
+.nav li {margin-bottom: 6px;}
 .nav a { font-weight: 600; }
 
 .muted { color: var(--muted); }
