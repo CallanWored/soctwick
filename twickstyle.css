@@ -490,9 +490,9 @@
     .payments {max-width: 220px;}
 }
 
-@media (max-width: 720px) {
+@media (max-width: 762px) {
     .cookie-banner{
-        width: calc(100vw - 60px);
+        width: calc(100vw - 40px);
       }
       .rest{
         display: block;
