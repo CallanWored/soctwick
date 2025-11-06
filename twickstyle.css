@@ -310,18 +310,6 @@
       max-width: 95vw;
       z-index: 9999;
       opacity: 0;
-      transition: transform var(--anim-duration) var(--anim-ease), opacity var(--anim-duration) var(--anim-ease);
-    }
-
-    .cookie-banner.show{
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    .cookie-banner.hide{
-      transform: translateX(-50%) translateY(12px);
-      opacity: 0;
-      pointer-events: none;
     }
 
     .cookie-text{
