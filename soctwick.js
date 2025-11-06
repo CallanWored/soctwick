@@ -62,104 +62,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
-  /* ------------------ Copy to clipboard ------------------ */
-  ;(function initCopy() {
-    const btn = document.getElementById('emailContact');
-    const emailTextEl = document.getElementById('emailText');
-
-    // но выйдем, если элементов нет
-    if (!btn || !emailTextEl) return;
-
-    // обработчик клика — async, использует локальную переменную btn
-    btn.addEventListener('click', async function (e) {
-      // если кнопка реализована как ссылка и вы не хотите навигации — можно отменить:
-      // if (this.tagName === 'A') e.preventDefault();
-
-      const text = (emailTextEl.textContent || emailTextEl.innerText || '').trim();
-      if (!text) {
-        // ничего копировать
-        return;
-      }
-
-      // если Clipboard API не доступен — fallback
-      if (!navigator.clipboard || !navigator.clipboard.writeText) {
-        try {
-          // fallback: выделить текст и сообщить пользователю
-          const range = document.createRange();
-          range.selectNodeContents(emailTextEl);
-          const sel = window.getSelection();
-          sel.removeAllRanges();
-          sel.addRange(range);
-          alert('Скопируйте email вручную: ' + text);
-        } catch (err) {
-          alert('Скопируйте email вручную: ' + text);
-        }
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(text);
-        btn.setAttribute('aria-label', 'Email скопирован');
-
-        const h3 = btn.querySelector('.contact-info h3');
-        if (h3) {
-          const original = h3.textContent;
-          h3.textContent = 'Скопировано!';
-          setTimeout(() => {
-            // проверка на существование элемента на момент восстановления
-            const currentH3 = btn.querySelector('.contact-info h3');
-            if (currentH3) currentH3.textContent = original;
-          }, 1400);
-        }
-      } catch (err) {
-        console.warn('Clipboard write failed', err);
-        alert('Не удалось автоматически скопировать email. Пожалуйста, скопируйте вручную: ' + text);
-      }
-    });
-  })();
-
   /* ------------------ Cookie banner / modal ------------------ */
-  ;(function initCookie() {
-    const KEY = 'soctwick_cookie_v1';
-    const wrap = document.getElementById('swCookieWrap');
-    const btnAccept = document.getElementById('swAccept');
-    const btnDetails = document.getElementById('swDetails');
-    const modalBackdrop = document.getElementById('swModalBackdrop');
-    const modal = document.getElementById('swModal');
-    const modalClose = document.getElementById('swModalClose');
-    const modalAccept = document.getElementById('swModalAccept');
-    if (!wrap || !btnAccept || !btnDetails || !modalBackdrop || !modal || !modalClose || !modalAccept) return;
+  ;(function(){
+      const KEY='cookiesConfirm';
+      const banner=document.getElementById('cookieBanner');
+      const btn=document.getElementById('cookieAccept');
 
-    function readConsent() {
-      try {
-        const raw = localStorage.getItem(KEY);
-        if (!raw) return null;
-        const obj = JSON.parse(raw);
-        if (obj.expires && Date.now() > obj.expires) { localStorage.removeItem(KEY); return null; }
-        return obj;
-      } catch (e) { return null; }
-    }
-    function saveConsent(payload) {
-      const expires = Date.now() + 365 * 24 * 60 * 60 * 1000;
-      const store = { ...payload, ts: Date.now(), expires };
-      try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { console.warn(e); }
-    }
-    function showBanner() { wrap.style.display = 'flex'; wrap.setAttribute('aria-hidden', 'false'); btnAccept.focus(); }
-    function hideBanner() { wrap.style.display = 'none'; wrap.setAttribute('aria-hidden', 'true'); }
-    function openModal() { modalBackdrop.style.display = 'flex'; modalBackdrop.setAttribute('aria-hidden','false'); requestAnimationFrame(()=>modal.classList.add('show')); modalClose.focus(); }
-    function closeModal() { modal.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); setTimeout(()=>{ modalBackdrop.style.display='none'; }, 240); }
-    function applyConsent() { const c = readConsent(); window._sw_cookie_consent = c || null; }
+      try{
+        if(localStorage.getItem(KEY)==='true'){
+          banner.remove();
+          return;
+        }
+      }catch(e){}
 
-    btnAccept.addEventListener('click', ()=>{ saveConsent({ necessary:true, analytics:true, marketing:true }); hideBanner(); applyConsent(); });
-    btnDetails.addEventListener('click', openModal);
-    modalAccept.addEventListener('click', ()=>{ saveConsent({ necessary:true, analytics:true, marketing:true }); closeModal(); hideBanner(); applyConsent(); });
-    modalClose.addEventListener('click', closeModal);
-    modalBackdrop.addEventListener('click', e=> { if (e.target === modalBackdrop) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalBackdrop.getAttribute('aria-hidden') === 'false') closeModal(); });
+      btn.addEventListener('click',()=>{
+        try{localStorage.setItem(KEY,'true');}catch(e){}
+        banner.remove();
+      });
 
-    if (!readConsent()) showBanner(); else applyConsent();
-    window.soctwickCookie = { getConsent: readConsent, openDetails: openModal };
-  })();
+      document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){
+          try{localStorage.setItem(KEY,'true');}catch(e){}
+          banner.remove();
+        }
+      });
+    })();
 
   /* ------------------ detectBgTheme: дебаунс + ограниченный observer ------------------ */
   ;(function detectBgTheme() {
@@ -214,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(()=> { try { obs.disconnect(); } catch(e){} }, OBS_TIMEOUT);
   })();
 /* ------------------ Функция для обновления favicon ------------------ */
-(function() {
+;(function() {
     'use strict';
     
     const originalFavicon = document.querySelector("link[rel*='icon']")?.href || '/favicon.ico';
