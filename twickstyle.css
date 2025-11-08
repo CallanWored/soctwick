@@ -183,7 +183,7 @@
 
 /* Ховер эффект */
 .contact-item:hover{
-  border-color: var(--green-accent);
+  border-color: var(--accent-green);
 }
 
 /* Внешний значок для ссылок */
@@ -206,12 +206,8 @@
   height:44px;
   min-width:44px;
   font-size:25px;
-  transition: transform 180ms ease, color 180ms ease;
   flex-shrink:0;
 }
-
-/* Меняем цвет иконки при ховере */
-.contact-item:hover .icon{ transform: translateY(-3px); color:var(--accent-blue); }
 
 /* Текстовая часть */
 .contact-info{
@@ -248,7 +244,7 @@
   padding:12px;
   border-radius:12px;
   background:linear-gradient(180deg, rgba(46,204,113,0.06), rgba(46,204,113,0.03));
-  border:1px dashed rgba(46,204,113,0.12);
+  border:2px dashed rgba(46,204,113,0.12);
   text-align:center;
 }
 
