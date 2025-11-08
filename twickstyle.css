@@ -30,6 +30,7 @@
     /* Sizing & Effects */
     --tw-corners: 1px solid rgb(49, 60, 71);
     --tw-radius: 16px;
+    --gap: 14px;
     --card-padding: 14px;
     --footer-max-w: 1200px;
     --transition: 240ms cubic-bezier(.2, .9, .3, 1);
@@ -110,6 +111,7 @@
    ========================================================================== */
 .contacts-container{
   display:flex;
+  margin: 0 auto;
   flex-direction:column;
   align-items:stretch;
   width:min(720px, 100%);
@@ -118,7 +120,6 @@
   border-radius:20px;
   padding:22px;
   gap:18px;
-  box-shadow:0 8px 30px rgba(0,0,0,0.45);
   border:1px solid rgba(255,255,255,0.04);
   backdrop-filter: blur(8px);
   transition: transform var(--transition), box-shadow var(--transition);
@@ -259,7 +260,7 @@
 /* Подсказка внизу */
 .hint{
   text-align:center;
-  color:var(--muted);
+  color: var(--muted);
   font-size:13px;
   padding-top:8px;
   border-top:1px solid rgba(255,255,255,0.03);
