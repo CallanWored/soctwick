@@ -332,8 +332,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      background: rgba(40, 56, 71, 0.6);
-      backdrop-filter: blur(8px);
+      background: rgba(40, 56, 71, .3);
+      backdrop-filter: saturate(120%) blur(8px);
       border: var(--tw-corners);
       color: var(--text);
       padding: 12px 16px;
@@ -363,6 +363,7 @@
 
     .cookie-btn{
       height: 32px;
+      width: auto !important;
       background: var(--tw-btn-green);
       color: #fff;
       font-size: 14px;
