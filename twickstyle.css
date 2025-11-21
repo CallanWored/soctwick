@@ -37,51 +37,6 @@
 }
 
 .footer-container {display: none;}
-/* ==========================================================================
-   3. THEME STYLES
-   ========================================================================== */
-
-/* --- Light Theme --- */
-.theme-light .contact-item {
-    background: var(--bg-light);
-    border-color: var(--tw-corners);
-    color: #0f1724;
-    box-shadow: 0 8px 24px rgba(15, 23, 36, 0.06);
-}
-
-.theme-light .contact-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    border-color: rgba(15, 23, 36, 0.10);
-}
-
-.theme-light .contact-title { color: var(--title-light); }
-.theme-light .contact-text { color: var(--text-light); }
-.theme-light .contacts-container { border-color: var(--tw-corners); }
-.theme-light .btn-accept { color: var(--text-dark); }
-
-/* --- Dark Theme --- */
-.theme-dark .contact-item {
-    background: var(--card-bg);
-    border-color: var(--border-dark);
-    color: #e6eef8;
-}
-
-.theme-dark .contact-item:hover {
-    background-color: rgba(74, 163, 255, 0.15);
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.10);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-.theme-dark h3 { color: #e6eef8; }
-.theme-dark p { color: #9aa6bd; }
-.theme-dark .contacts-container { border-color: var(--border-dark); }
-.theme-dark .icon {
-    filter: brightness(1.05) saturate(1.1);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-}
-
 
 /* ==========================================================================
    4. LAYOUT & CONTAINER
@@ -121,7 +76,6 @@
   padding:22px;
   gap:18px;
   border:1px solid rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
@@ -162,10 +116,10 @@
   gap:12px;
   padding:var(--card-padding);
   border-radius:12px;
-  background:var(--card-bg);
-  border:1px solid rgba(255,255,255,0.03);
+  background: var(--card-bg);
+  border:1px solid var(--border-dark);
   text-decoration:none;
-  color:inherit;
+  color: inherit;
   cursor:pointer;
   min-height:64px;
   flex: 1 1 calc(50% - (var(--gap) / 2)); /* два в ряд при ширине контейнера */
@@ -174,16 +128,15 @@
   position:relative;
 }
 
+.contact-item:hover {
+    border-color: var(--accent-green);
+}
+
 /* На узких экранах — элементы занимают всю ширину */
 @media (max-width:520px){
   .contact-item{
     flex-basis:100%;
   }
-}
-
-/* Ховер эффект */
-.contact-item:hover{
-  border-color: var(--accent-green);
 }
 
 /* Внешний значок для ссылок */
@@ -196,17 +149,9 @@
   font-size:13px;
   color:var(--muted);
 }
-
 /* Иконка */
 .icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:44px;
-  height:44px;
-  min-width:44px;
   font-size:25px;
-  flex-shrink:0;
 }
 
 /* Текстовая часть */
@@ -536,12 +481,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
     .cookie-banner, .cookie-btn{ transition: none; }
     .cookie-btn:focus, .cookie-text a:focus{ outline: 3px solid rgba(77,163,255,0.2); outline-offset: 2px; }
 }
