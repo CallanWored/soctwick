@@ -69,7 +69,7 @@
 	transition: ease .3s
 }
 
-.contact-item {
+.contact-item:hover {
 	transform: translateY(-3px);
 }
 
