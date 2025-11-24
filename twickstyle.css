@@ -1,34 +1,3 @@
-:root {
-	--tw-btn-green: rgb(50, 199, 75);
-	--tw-btn-green-hover: brightness(1.1);
-	--page-bg: #0b1216;
-	--card-bg: #1e2933;
-	--title-light: rgba(3, 6, 26, 0.85);
-	--title-dark: rgba(250, 252, 255, 0.85);
-	--text-light: rgb(114, 138, 150);
-	--text-dark: #e9f0f2;
-	--muted: #9aa6ad;
-	--accent-green: rgb(50, 199, 75);
-	--accent-blue: #2563eb;
-	--bg-light: rgb(244, 247, 250);
-	--bg-dark: #1e2933;
-	--border-light: rgb(216, 218, 229);
-	--border-dark: rgb(49, 60, 71);
-	--panel: #222;
-	--text: #f5f5f5;
-	--link: #4da3ff;
-	--btn: #007bff;
-	--btn-hover: #006ae0;
-
-	/* Sizing & Effects */
-	--tw-corners: 1px solid rgb(49, 60, 71);
-	--tw-radius: 16px;
-	--gap: 14px;
-	--card-padding: 14px;
-	--footer-max-w: 1200px;
-	--transition: 240ms cubic-bezier(0.2, 0.9, 0.3, 1);
-}
-
 .big-text {
 	text-align: center;
 }
@@ -90,7 +59,6 @@
 	padding: 14px;
 	border-radius: 12px;
 	background: var(--surface-background-secondary-40);
-	border: 1px solid var(--surface-border);
 	text-decoration: none;
 	color: inherit;
 	cursor: pointer;
