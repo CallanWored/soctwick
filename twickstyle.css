@@ -87,10 +87,10 @@
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	padding: var(--card-padding);
+	padding: 14px;
 	border-radius: 12px;
-	background: var(--card-bg);
-	border: 1px solid var(--border-dark);
+	background: var(--surface-background-secondary-40);
+	border: 1px solid var(--surface-border);
 	text-decoration: none;
 	color: inherit;
 	cursor: pointer;
@@ -98,10 +98,6 @@
 	flex: 1 1 calc(50% - (14px / 2));
 	box-sizing: border-box;
 	position: relative;
-}
-
-.contact-item:hover {
-	border-color: var(--surface-brand);
 }
 
 @media (max-width: 520px) {
@@ -211,7 +207,7 @@
 
 .cookie-text a {
 	text-decoration: none;
-	color: white;
+	color: var(--text-main);
 	transition: 0.3s;
 }
 
@@ -238,7 +234,7 @@
 	transition: 0.3s;
 }
 .cookie-btn:hover {
-	filter: var(--surface-brand-85);
+	background: var(--surface-brand-85);
 }
 
 /* RESPONSIVE MEDIA QUERIES */
