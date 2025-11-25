@@ -1,3 +1,12 @@
+:root {
+	--surface-background-secondary-40: rgba(40, 56, 71, 0.4);
+	--surface-border: #313C47;
+	--text-secondary: #838B8F;
+	--text-main: rgba(250,252,255,0.85);
+	--surface-brand: #32C74B;
+	--surface-brand-85: #32C74BD9;
+}
+
 .big-text {
 	text-align: center;
 }
